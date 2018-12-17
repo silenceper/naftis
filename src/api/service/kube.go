@@ -302,7 +302,7 @@ type Tree struct {
 }
 
 func (k *kubeInfo) Tree() []Tree {
-	services := k.Services("").Exclude("kube-system", bootstrap.Args.IstioNamespace, bootstrap.Args.Namespace)
+	services := k.Services("").Exclude("kube-system", bootstrap.Args.Namespace)
 	t := make([]Tree, 0, len(services))
 	for _, s := range services {
 		children := make([]Tree, 0, len(s.Pods))
