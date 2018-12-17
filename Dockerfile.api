@@ -1,6 +1,11 @@
+FROM golang:alpine as builder
+ADD . /go/src/github.com/xiaomi/naftis/
+RUN cd /go/src/github.com/xiaomi/maftis/ \
+  && make build.api
+
 FROM scratch
 
-ADD bin/naftis-api /usr/app/naftis/bin/
+COPY --from=builder /go/src/github.com/xiaomi/maftis/bin/naftis-api /usr/app/naftis/bin/
 
 EXPOSE 50000
 
