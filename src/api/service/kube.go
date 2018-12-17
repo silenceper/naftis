@@ -108,8 +108,8 @@ func (p services) Exclude(namespaces ...string) services {
 }
 
 func (k *kubeInfo) Services(uid string) services {
-	k.mtx.RLock()
-	defer k.mtx.RUnlock()
+	// k.mtx.RLock()
+	// defer k.mtx.RUnlock()
 
 	if uid == "" {
 		return k.services
@@ -126,8 +126,8 @@ func (k *kubeInfo) Services(uid string) services {
 }
 
 func (k *kubeInfo) Namespaces(namespace string) namespaces {
-	k.mtx.RLock()
-	defer k.mtx.RUnlock()
+	// k.mtx.RLock()
+	// defer k.mtx.RUnlock()
 
 	if namespace == "" {
 		return k.namespaces
