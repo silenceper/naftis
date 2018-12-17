@@ -108,8 +108,8 @@ func (p services) Exclude(namespaces ...string) services {
 }
 
 func (k *kubeInfo) Services(uid string) services {
-	// k.mtx.RLock()
-	// defer k.mtx.RUnlock()
+	k.mtx.RLock()
+	defer k.mtx.RUnlock()
 
 	if uid == "" {
 		return k.services
@@ -126,8 +126,8 @@ func (k *kubeInfo) Services(uid string) services {
 }
 
 func (k *kubeInfo) Namespaces(namespace string) namespaces {
-	// k.mtx.RLock()
-	// defer k.mtx.RUnlock()
+	k.mtx.RLock()
+	defer k.mtx.RUnlock()
 
 	if namespace == "" {
 		return k.namespaces
@@ -342,19 +342,20 @@ func (k *kubeInfo) sync() {
 			// panic(err.Error())
 			log.Error("[k8s] get namespaces err", "err", err)
 		}
-		k.mtx.Lock()
-		k.services = make([]service, 0, len(svcs.Items))
+		services := make([]service, 0, len(svcs.Items))
 		k.wg.Add(len(svcs.Items))
 		for _, i := range svcs.Items {
 			go func(i v1.Service) {
 				s := service{}
 				s.Service = i
 				s.Pods = k.Pods(i.Spec.Selector)
-				k.services = append(k.services, s)
+				services = append(services, s)
 				k.wg.Done()
 			}(i)
 		}
 		k.wg.Wait()
+		k.mtx.Lock()
+		k.services = services
 		k.namespaces = ns.Items
 		k.mtx.Unlock()
 
