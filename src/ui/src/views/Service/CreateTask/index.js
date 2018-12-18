@@ -26,14 +26,14 @@ import './index.scss'
 const FormItem = Form.Item
 
 class CreateTask extends Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
       stepList: [
-        {title: T('app.common.createTaskStep1')},
-        {title: T('app.common.createTaskStep2')},
-        {title: T('app.common.createTaskStep3')}
+        { title: T('app.common.createTaskStep1') },
+        { title: T('app.common.createTaskStep2') },
+        { title: T('app.common.createTaskStep3') }
       ],
       namespace: 'default'
     }
@@ -45,7 +45,7 @@ class CreateTask extends Component {
     this.submitParam = {}
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { location, history } = this.props
     // history param from taskTemplate item
     if (!location.query) {
@@ -61,9 +61,9 @@ class CreateTask extends Component {
           this.submitParam.tmplID = item.taskTmplID
           let data = []
           for (let i in item.data) {
-            data.push({name: i, id: i})
+            data.push({ name: i, id: i })
           }
-          this.createItem.createList.push({key: item.name, type: item.formType, data})
+          this.createItem.createList.push({ key: item.name, title: item.title, type: item.formType, data })
         }
       })
     }
@@ -73,14 +73,14 @@ class CreateTask extends Component {
     this.props.setCurrentStepData(0)
 
     const crumbsItems = [
-      {title: T('app.menu.service'), to: '/'},
-      {title: T('app.common.createTask'), to: '/service/createTask'}
+      { title: T('app.menu.service'), to: '/' },
+      { title: T('app.common.createTask'), to: '/service/createTask' }
     ]
     setBreadCrumbs(crumbsItems)
   }
 
   updateParam = (value, key, index) => {
-    let {createTaskList} = this.props
+    let { createTaskList } = this.props
     createTaskList[index][key] = value
     this.props.setCreateTaskListData(createTaskList)
   }
@@ -101,7 +101,7 @@ class CreateTask extends Component {
         title: 'Notification',
         message: msg,
         type: type,
-        onClose: () => {}
+        onClose: () => { }
       })
       this.canContinue = false
     }
@@ -132,7 +132,7 @@ class CreateTask extends Component {
   }
 
   changeNamespace = (namespace) => {
-    this.setState({namespace})
+    this.setState({ namespace })
   }
 
   /**
@@ -161,7 +161,7 @@ class CreateTask extends Component {
                       mode='single' list={kubeinfo.namespaces}
                       searchable
                       value={'0'} // TODO default value is not working for the first render
-                      style={{margin: '4px 4px', width: '200px'}}
+                      style={{ margin: '4px 4px', width: '200px' }}
                       disabled={currentStep === 1}
                       onChange={(item) => {
                         if (item[0]) {
@@ -191,12 +191,12 @@ class CreateTask extends Component {
                             item.createList.length ? item.createList.map((v, i) => {
                               let data = JSON.parse(JSON.stringify(v.data))
                               return (
-                                <FormItem label={v.key + '：'} key={i}>
+                                <FormItem label={v.title + '(' + v.key + ')：'} key={i}>
                                   {
                                     (v.type === Task.varFormType.STRING) && <Input
                                       value={item[v.key]}
                                       type={'text'}
-                                      style={{margin: '4px 4px', width: '200px'}}
+                                      style={{ margin: '4px 4px', width: '200px' }}
                                       onChange={(e) => {
                                         this.updateParam(e.target.value, v.key, index)
                                       }} />
@@ -205,7 +205,7 @@ class CreateTask extends Component {
                                     (v.type === Task.varFormType.NUMBER) && <Input
                                       value={item[v.key]}
                                       type={'amount'}
-                                      style={{margin: '4px 4px', width: '200px'}}
+                                      style={{ margin: '4px 4px', width: '200px' }}
                                       onChange={(e) => {
                                         this.updateParam(e.target.value, v.key, index)
                                       }} />
@@ -227,7 +227,7 @@ class CreateTask extends Component {
                                       mode='single' list={data}
                                       searchable
                                       value={item[v.key]}
-                                      style={{margin: '4px 4px', width: '200px'}}
+                                      style={{ margin: '4px 4px', width: '200px' }}
                                       onChange={(value) => {
                                         if (value[0]) {
                                           this.updateParam(value[0].id, v.key, index)
@@ -237,7 +237,7 @@ class CreateTask extends Component {
                                   {
                                     v.type === Task.varFormType.DATETIME && <DatePicker
                                       value={item[v.key]}
-                                      style={{margin: '4px 4px', width: '200px'}}
+                                      style={{ margin: '4px 4px', width: '200px' }}
                                       onChange={(d) => {
                                         if (d) {
                                           this.updateParam(DatePicker.format(d, 'yyyy-MM E'), v.key, index)
@@ -340,7 +340,7 @@ class CreateTask extends Component {
           }
           {
             currentStep === 1
-              ? <Button style={{marginRight: 10}} type='primary' appearance='line' onClick={() => {
+              ? <Button style={{ marginRight: 10 }} type='primary' appearance='line' onClick={() => {
                 this.props.setCurrentStepData(+currentStep - 1)
               }
               }>{T('app.common.previous')}</Button> : null
@@ -370,7 +370,7 @@ class CreateTask extends Component {
           }
           {
             currentStep === 2
-              ? <Button style={{marginRight: 10}} type='primary' appearance='line' onClick={() => {
+              ? <Button style={{ marginRight: 10 }} type='primary' appearance='line' onClick={() => {
                 this.props.history.replace('/service/taskTemplate')
               }
               }>{T('app.common.return')}</Button> : null
@@ -378,7 +378,7 @@ class CreateTask extends Component {
           {
             currentStep === 2
               ? <Button
-                style={{marginRight: 10}}
+                style={{ marginRight: 10 }}
                 type='danger'
                 // TODO change SUCCESS comment when socketData.status is not equal Task.status.SUCCESS.
                 disabled={!socketData || socketData.status !== Task.status.SUCCESS || socketData.command === Task.commandint.ROLLBACK}
@@ -411,11 +411,11 @@ class CreateTask extends Component {
     )
   }
 
-  render () {
+  render() {
     return (
       <div className='create-task'>
-        { this.renderTop() }
-        { this.renderCenter() }
+        {this.renderTop()}
+        {this.renderCenter()}
       </div>
     )
   }
@@ -430,4 +430,4 @@ const mapStateToProps = state => ({
   kubeinfo: state.taskTemplate.kubeinfo
 })
 
-export default connect(mapStateToProps, {...Actions, ...TaskTemplateActions, ...socketAction})(CreateTask)
+export default connect(mapStateToProps, { ...Actions, ...TaskTemplateActions, ...socketAction })(CreateTask)
