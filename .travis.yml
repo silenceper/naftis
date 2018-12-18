@@ -20,4 +20,5 @@ matrix:
 env:
   global:
     HUB: silenceper
+    TRAVIS_TAG: dev
     DOCKER_USERNAME: silenceper
